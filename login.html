@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login - App Barbearia</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="app-container">
+    <header class="app-header">
+      <h1 class="app-title">Entrar</h1>
+      <p class="app-subtitle">Acesse sua conta para agendar.</p>
+    </header>
+
+    <form action="home.html" method="get">
+      <div class="form-group">
+        <label for="email">E-mail</label>
+        <input id="email" name="email" type="email" placeholder="seuemail@exemplo.com" required />
+      </div>
+
+      <div class="form-group">
+        <label for="senha">Senha</label>
+        <input id="senha" name="senha" type="password" placeholder="Digite sua senha" required />
+      </div>
+
+      <button type="submit" class="btn btn-full">Entrar</button>
+    </form>
+
+    <div style="margin-top: 12px; text-align:center;">
+      <a href="index.html" class="btn btn-secondary">Cadastrar-se</a>
+    </div>
+
+    <footer class="app-footer">
+      App Barbearia • Protótipo para testes de usabilidade
+    </footer>
+  </main>
+</body>
+</html>

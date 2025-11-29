@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cadastro - App Barbearia</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="app-container">
+    <header class="app-header">
+      <h1 class="app-title">Tela de Cadastro</h1>
+      <p class="app-subtitle">Crie sua conta para agendar seus horários.</p>
+    </header>
+
+    <form action="login.html" method="get">
+      <div class="form-group">
+        <label for="nome">Nome</label>
+        <input id="nome" name="nome" type="text" placeholder="Digite seu nome" required />
+      </div>
+
+      <div class="form-group">
+        <label for="celular">Celular</label>
+        <input id="celular" name="celular" type="tel" placeholder="(00) 00000-0000" required />
+      </div>
+
+      <div class="form-group">
+        <label for="cpf">CPF</label>
+        <input id="cpf" name="cpf" type="text" placeholder="000.000.000-00" required />
+      </div>
+
+      <div class="form-group">
+        <label for="email">E-mail</label>
+        <input id="email" name="email" type="email" placeholder="seuemail@exemplo.com" required />
+      </div>
+
+      <div class="form-group">
+        <label for="senha">Senha</label>
+        <input id="senha" name="senha" type="password" placeholder="Digite uma senha" required />
+      </div>
+
+      <button type="submit" class="btn btn-full">Cadastrar</button>
+    </form>
+
+    <div style="margin-top: 12px; text-align:center;">
+      <a href="login.html" class="btn btn-secondary">Voltar para login</a>
+    </div>
+
+    <footer class="app-footer">
+      App Barbearia • Protótipo para testes de usabilidade
+    </footer>
+  </main>
+</body>
+</html>

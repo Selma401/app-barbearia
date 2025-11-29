@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Selecionar horário - App Barbearia</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="app-container">
+    <div class="top-bar">
+      <a href="home.html" class="back-link">&#8592; Voltar</a>
+    </div>
+
+    <header class="app-header" style="margin-bottom:12px;">
+      <h1 class="app-title">Selecione um horário</h1>
+      <p class="app-subtitle">Escolha uma data e um horário disponível.</p>
+    </header>
+
+    <form action="confirmacao.html" method="get">
+      <div class="form-group">
+        <label for="data">Data</label>
+        <input id="data" name="data" type="date" required />
+      </div>
+
+      <div class="form-group">
+        <label for="hora">Horário</label>
+        <select id="hora" name="hora" required>
+          <option value="">Selecione</option>
+          <option>08:00</option>
+          <option>09:30</option>
+          <option>11:00</option>
+          <option>13:00</option>
+          <option>14:30</option>
+          <option>16:00</option>
+        </select>
+      </div>
+
+      <button type="submit" class="btn btn-full">Continuar</button>
+    </form>
+
+    <footer class="app-footer">
+      App Barbearia • Escolha o melhor horário para você.
+    </footer>
+  </main>
+</body>
+</html>
