@@ -1,1 +1,48 @@
-<!DOCTYPE html><html><head><meta charset='UTF-8'><title>Em construção</title><link rel='stylesheet' href='style.css'></head><body><main class='app-frame'><h1>Em construção</h1></main></body></html>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Selecionar horário • App Barbearia</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body data-page="horario">
+  <main class="app-frame">
+    <div class="top-bar">
+      <a href="home.html" class="back-link">&#8592; Voltar</a>
+      <span class="top-title">Selecione um horário</span>
+    </div>
+
+    <section>
+      <p class="tag" id="horario-servico">Serviço: -</p>
+
+      <div class="form-group" style="margin-top:12px;">
+        <label for="data">Data</label>
+        <input id="data" name="data" type="date" required />
+      </div>
+
+      <p class="app-section-title" style="margin-top:16px;">Horários disponíveis</p>
+      <small class="tag">Seg a Sex: 07:00 - 18:00 • Sáb: 07:00 - 13:00 • Almoço: 12:00 - 13:00 indisponível.</small>
+
+      <div id="lista-horarios" class="time-grid"></div>
+
+      <form id="form-horario">
+        <input type="hidden" id="hora" name="hora" />
+        <button type="submit" class="btn btn-full" style="margin-top:10px;">Continuar</button>
+      </form>
+    </section>
+
+    <footer class="app-footer">
+      Selecione uma data válida e um horário disponível.
+    </footer>
+
+    <div class="bottom-nav-dots">
+      <div class="nav-dot"></div>
+      <div class="nav-dot active"></div>
+      <div class="nav-dot"></div>
+    </div>
+
+    <script src="script.js"></script>
+  </main>
+</body>
+</html>

@@ -1,1 +1,76 @@
-<!DOCTYPE html><html><head><meta charset='UTF-8'><title>Em construção</title><link rel='stylesheet' href='style.css'></head><body><main class='app-frame'><h1>Em construção</h1></main></body></html>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Home • App Barbearia</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body data-page="home">
+  <main class="app-frame">
+    <header class="app-header">
+      <p class="app-logo">BARBERSHOP</p>
+      <h1 class="app-title" id="home-nome">Bem-vindo!</h1>
+      <p class="app-subtitle">Seg a Sex • 07:00 às 18:00 • Sáb • 07:00 às 13:00</p>
+    </header>
+
+    <nav class="app-nav">
+      <button class="btn-secondary" disabled>Serviços</button>
+      <button class="btn-secondary" disabled>Sobre nós</button>
+      <a href="agendamentos.html" class="btn btn-secondary">Meus agendamentos</a>
+    </nav>
+
+    <section>
+      <h2 class="app-section-title">Serviços</h2>
+
+      <article class="card">
+        <div class="card-header">
+          <span>Corte</span>
+          <span class="badge">R$ 25,00</span>
+        </div>
+        <p class="tag">Corte clássico e moderno.</p>
+        <div style="margin-top:8px; display:flex; justify-content:flex-end; gap:8px;">
+          <button class="btn-ghost" disabled>Detalhes</button>
+          <a href="horario.html?servico=Corte&preco=25" class="btn">Reservar</a>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-header">
+          <span>Corte + sobrancelha</span>
+          <span class="badge">R$ 35,00</span>
+        </div>
+        <p class="tag">Pacote para dar aquele up no visual.</p>
+        <div style="margin-top:8px; display:flex; justify-content:flex-end; gap:8px;">
+          <button class="btn-ghost" disabled>Detalhes</button>
+          <a href="horario.html?servico=Corte+%2B+sobrancelha&preco=35" class="btn btn-secondary">Reservar</a>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-header">
+          <span>Corte + sobrancelha + barba</span>
+          <span class="badge">R$ 45,00</span>
+        </div>
+        <p class="tag">Experiência completa.</p>
+        <div style="margin-top:8px; display:flex; justify-content:flex-end; gap:8px;">
+          <button class="btn-ghost" disabled>Detalhes</button>
+          <a href="horario.html?servico=Corte+%2B+sobrancelha+%2B+barba&preco=45" class="btn btn-secondary">Reservar</a>
+        </div>
+      </article>
+    </section>
+
+    <footer class="app-footer">
+      Escolha um serviço para iniciar o agendamento.
+    </footer>
+
+    <div class="bottom-nav-dots">
+      <div class="nav-dot"></div>
+      <div class="nav-dot active"></div>
+      <div class="nav-dot"></div>
+    </div>
+
+    <script src="script.js"></script>
+  </main>
+</body>
+</html>

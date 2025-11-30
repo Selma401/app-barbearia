@@ -1,1 +1,46 @@
-<!DOCTYPE html><html><head><meta charset='UTF-8'><title>Em construção</title><link rel='stylesheet' href='style.css'></head><body><main class='app-frame'><h1>Em construção</h1></main></body></html>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Confirmar agendamento • App Barbearia</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body data-page="confirmacao">
+  <main class="app-frame">
+    <div class="top-bar">
+      <a href="javascript:history.back()" class="back-link">&#8592; Voltar</a>
+      <span class="top-title">Confirme seu agendamento</span>
+    </div>
+
+    <section class="card" style="margin-top:6px;">
+      <div class="card-header">
+        <span id="conf-servico">Serviço</span>
+        <span class="badge" id="conf-barber">Barbeiro padrão</span>
+      </div>
+      <p class="tag">
+        <span id="conf-data">Data</span> • 
+        <span id="conf-hora">Hora</span>
+      </p>
+      <p class="price" id="conf-preco">R$ 0,00</p>
+      <p class="tag" id="conf-email"></p>
+    </section>
+
+    <form id="form-confirmacao" style="margin-top:18px;">
+      <button type="submit" class="btn btn-full">Confirmar</button>
+    </form>
+
+    <footer class="app-footer">
+      Ao confirmar, o agendamento aparecerá em "Meus agendamentos".
+    </footer>
+
+    <div class="bottom-nav-dots">
+      <div class="nav-dot"></div>
+      <div class="nav-dot active"></div>
+      <div class="nav-dot"></div>
+    </div>
+
+    <script src="script.js"></script>
+  </main>
+</body>
+</html>

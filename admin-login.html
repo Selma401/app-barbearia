@@ -1,1 +1,44 @@
-<!DOCTYPE html><html><head><meta charset='UTF-8'><title>Em construção</title><link rel='stylesheet' href='style.css'></head><body><main class='app-frame'><h1>Em construção</h1></main></body></html>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin • Login</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body data-page="admin-login">
+  <main class="app-frame">
+    <header class="app-header">
+      <p class="app-logo">BARBERSHOP • ADMIN</p>
+      <h1 class="app-title">Acesso do administrador</h1>
+      <p class="app-subtitle">Área exclusiva para gestão de agendamentos.</p>
+    </header>
+
+    <form id="form-admin-login">
+      <div class="form-group">
+        <label for="admin-email">E-mail</label>
+        <input id="admin-email" name="admin-email" type="email" placeholder="admin@barbearia.com" required />
+      </div>
+
+      <div class="form-group">
+        <label for="admin-senha">Senha</label>
+        <input id="admin-senha" name="admin-senha" type="password" placeholder="Digite a senha" required />
+      </div>
+
+      <button type="submit" class="btn btn-full">Entrar como admin</button>
+    </form>
+
+    <footer class="app-footer">
+      Protótipo: login fixo admin@barbearia.com / 123456.
+    </footer>
+
+    <div class="bottom-nav-dots">
+      <div class="nav-dot active"></div>
+      <div class="nav-dot"></div>
+      <div class="nav-dot"></div>
+    </div>
+
+    <script src="script.js"></script>
+  </main>
+</body>
+</html>

@@ -1,1 +1,107 @@
-<!DOCTYPE html><html><head><meta charset='UTF-8'><title>Em construção</title><link rel='stylesheet' href='style.css'></head><body><main class='app-frame'><h1>Em construção</h1></main></body></html>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Painel admin • App Barbearia</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body data-page="admin">
+  <main class="app-frame">
+    <header class="app-header">
+      <p class="app-logo">BARBERSHOP • ADMIN</p>
+      <h1 class="app-title">Painel do administrador</h1>
+      <p class="app-subtitle">Gestão de agendamentos, financeiro e barbeiros.</p>
+    </header>
+
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="tab-agendamentos">Agendamentos</button>
+      <button class="tab-btn" data-tab="tab-financeiro">Financeiro</button>
+      <button class="tab-btn" data-tab="tab-bloqueios">Bloqueios</button>
+      <button class="tab-btn" data-tab="tab-barbeiros">Barbeiros</button>
+    </div>
+
+    <section id="tab-agendamentos" class="tab-panel active">
+      <h2 class="app-section-title">Agendamentos</h2>
+      <div class="form-group">
+        <label for="filtro-data">Filtrar por data</label>
+        <input type="date" id="filtro-data" />
+      </div>
+      <div id="admin-lista-agendamentos"></div>
+    </section>
+
+    <section id="tab-financeiro" class="tab-panel">
+      <h2 class="app-section-title">Financeiro</h2>
+      <p class="tag">Resumo simples de agendamentos pagos e pendentes.</p>
+      <div id="admin-financeiro-resumo" class="tag"></div>
+      <div id="admin-financeiro-lista"></div>
+    </section>
+
+    <section id="tab-bloqueios" class="tab-panel">
+      <h2 class="app-section-title">Bloqueios de agenda</h2>
+      <p class="tag">Use para bloquear dias ou horários, visível também para o usuário.</p>
+      <form id="form-bloqueio">
+        <div class="form-group">
+          <label for="bloq-data">Data</label>
+          <input type="date" id="bloq-data" required />
+        </div>
+        <div class="form-group">
+          <label for="bloq-hora">Horário (opcional)</label>
+          <input type="time" id="bloq-hora" />
+        </div>
+        <button type="submit" class="btn btn-full">Adicionar bloqueio</button>
+      </form>
+      <div id="lista-bloqueios" style="margin-top:10px;"></div>
+    </section>
+
+    <section id="tab-barbeiros" class="tab-panel">
+      <h2 class="app-section-title">Barbeiros</h2>
+      <form id="form-barbeiro">
+        <div class="form-group">
+          <label for="barbeiro-nome">Nome do barbeiro</label>
+          <input id="barbeiro-nome" type="text" placeholder="Ex.: João, Pedro..." required />
+        </div>
+        <button type="submit" class="btn btn-full">Cadastrar barbeiro</button>
+      </form>
+      <div id="lista-barbeiros" style="margin-top:10px;"></div>
+
+      <h3 class="app-section-title" style="margin-top:14px;">Agendar manualmente</h3>
+      <form id="form-agendamento-manual">
+        <div class="form-group">
+          <label for="m-nome">Nome do cliente</label>
+          <input id="m-nome" type="text" required />
+        </div>
+        <div class="form-group">
+          <label for="m-servico">Serviço</label>
+          <input id="m-servico" type="text" placeholder="Ex.: Corte" required />
+        </div>
+        <div class="form-group">
+          <label for="m-data">Data</label>
+          <input id="m-data" type="date" required />
+        </div>
+        <div class="form-group">
+          <label for="m-hora">Horário</label>
+          <input id="m-hora" type="time" required />
+        </div>
+        <div class="form-group">
+          <label for="m-barbeiro">Barbeiro</label>
+          <select id="m-barbeiro"></select>
+        </div>
+        <button type="submit" class="btn btn-full">Criar agendamento</button>
+      </form>
+    </section>
+
+    <footer class="app-footer">
+      Dados salvos apenas neste navegador (protótipo, sem servidor).
+    </footer>
+
+    <div class="bottom-nav-dots">
+      <div class="nav-dot"></div>
+      <div class="nav-dot active"></div>
+      <div class="nav-dot"></div>
+    </div>
+
+    <script src="script.js"></script>
+  </main>
+</body>
+</html>

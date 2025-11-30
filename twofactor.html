@@ -1,1 +1,38 @@
-<!DOCTYPE html><html><head><meta charset='UTF-8'><title>Em construção</title><link rel='stylesheet' href='style.css'></head><body><main class='app-frame'><h1>Em construção</h1></main></body></html>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>2º fator • App Barbearia</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body data-page="twofactor">
+  <main class="app-frame">
+    <header class="app-header">
+      <p class="app-logo">BARBERSHOP</p>
+      <h1 class="app-title">Confirme o acesso</h1>
+      <p class="app-subtitle">Enviamos um código de 6 dígitos (simulado) para seu e-mail.</p>
+    </header>
+
+    <form id="form-2fa">
+      <div class="form-group">
+        <label for="codigo">Código de 6 dígitos</label>
+        <input id="codigo" name="codigo" type="text" maxlength="6" placeholder="000000" required />
+      </div>
+      <button class="btn btn-full" type="submit">Confirmar</button>
+    </form>
+
+    <footer class="app-footer">
+      Nesta versão de protótipo qualquer código de 6 dígitos é aceito.
+    </footer>
+
+    <div class="bottom-nav-dots">
+      <div class="nav-dot"></div>
+      <div class="nav-dot active"></div>
+      <div class="nav-dot"></div>
+    </div>
+
+    <script src="script.js"></script>
+  </main>
+</body>
+</html>
