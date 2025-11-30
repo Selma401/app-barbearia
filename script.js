@@ -1,11 +1,11 @@
 // Protótipo App Barbearia - fluxo com LocalStorage simulando banco de dados.
-// Tudo fica salvo apenas no navegador do usuário.
 
 const STORAGE_KEYS = {
   USER: 'bt_user',
   BOOKINGS: 'bt_bookings',
   BLOCKS: 'bt_blocks',
-  BARBERS: 'bt_barbers'
+  BARBERS: 'bt_barbers',
+  ADMIN_LOGGED: 'bt_admin_logged'
 };
 
 function load(key, fallback) {
@@ -54,12 +54,12 @@ function setBarbers(list) {
   save(STORAGE_KEYS.BARBERS, list);
 }
 
-// Gera ID simples
+// ID simples
 function genId() {
   return 'id-' + Date.now() + '-' + Math.floor(Math.random() * 9999);
 }
 
-// Gera slots por regra de negócio
+// Slots (regras de horário)
 function generateSlotsForDate(dateStr) {
   if (!dateStr) return [];
 
@@ -81,33 +81,63 @@ function generateSlotsForDate(dateStr) {
     for (let m = 0; m < 60; m += 30) {
       const hh = String(h).padStart(2, '0');
       const mm = String(m).padStart(2, '0');
-      // pular intervalo de almoço 12:00–13:00
-      if (h === 12) continue;
+      if (h === 12) continue; // pula almoço
       slots.push(hh + ':' + mm);
     }
   }
   return slots;
 }
 
-// Verifica se bloco atinge data/hora
+// Bloqueios
 function isBlocked(dateStr, timeStr) {
   const blocks = getBlocks();
   return blocks.some(b => {
     if (b.date !== dateStr) return false;
-    if (!b.time) return true; // bloqueio do dia todo
+    if (!b.time) return true; // dia todo
     if (!timeStr) return false;
     return b.time === timeStr;
   });
 }
 
-// helper query params
+// Params
 function getParam(name, fallback = '') {
   const params = new URLSearchParams(window.location.search);
   return params.get(name) || fallback;
 }
 
+// Logout cliente
+function logoutUser() {
+  localStorage.removeItem(STORAGE_KEYS.USER);
+  window.location.href = 'login.html';
+}
+
+// Logout admin
+function logoutAdmin() {
+  localStorage.removeItem(STORAGE_KEYS.ADMIN_LOGGED);
+  window.location.href = 'admin-login.html';
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   const page = document.body.dataset.page;
+
+  // Proteção de rotas do cliente
+  const clientProtected = ['home', 'horario', 'confirmacao', 'agendamentos'];
+  if (clientProtected.includes(page)) {
+    const user = getCurrentUser();
+    if (!user) {
+      window.location.href = 'login.html';
+      return;
+    }
+  }
+
+  // Proteção de rota admin
+  if (page === 'admin') {
+    const adminLogged = localStorage.getItem(STORAGE_KEYS.ADMIN_LOGGED);
+    if (adminLogged !== '1') {
+      window.location.href = 'admin-login.html';
+      return;
+    }
+  }
 
   // CADASTRO
   if (page === 'cadastro') {
@@ -125,7 +155,6 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
 
-      // validação simples de email
       if (!email.includes('@') || !email.includes('.')) {
         alert('Informe um e-mail válido.');
         return;
@@ -201,6 +230,9 @@ document.addEventListener('DOMContentLoaded', () => {
       const firstName = user.nome ? user.nome.trim().split(' ')[0] : 'Cliente';
       spanNome.textContent = 'Bem-vindo, ' + firstName + '!';
     }
+
+    const btnLogout = document.getElementById('btn-logout');
+    btnLogout?.addEventListener('click', logoutUser);
   }
 
   // SELEÇÃO DE HORÁRIO
@@ -403,6 +435,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const email = document.getElementById('admin-email').value.trim();
       const senha = document.getElementById('admin-senha').value.trim();
       if (email === 'admin@barbearia.com' && senha === '123456') {
+        localStorage.setItem(STORAGE_KEYS.ADMIN_LOGGED, '1');
         window.location.href = 'admin.html';
       } else {
         alert('Credenciais inválidas. Use admin@barbearia.com / 123456 (protótipo).');
@@ -412,6 +445,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ADMIN PAINEL
   if (page === 'admin') {
+    const btnAdminLogout = document.getElementById('btn-admin-logout');
+    btnAdminLogout?.addEventListener('click', logoutAdmin);
+
     const tabs = document.querySelectorAll('.tab-btn');
     const panels = document.querySelectorAll('.tab-panel');
     tabs.forEach(btn => {
@@ -424,7 +460,6 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
 
-    // Carrega barbeiros default se vazio
     let barbers = getBarbers();
     if (!barbers.length) {
       barbers = [
@@ -462,7 +497,6 @@ document.addEventListener('DOMContentLoaded', () => {
     filtroData?.addEventListener('change', renderAdminAgendamentos);
     renderAdminAgendamentos();
 
-    // Financeiro
     const contFinResumo = document.getElementById('admin-financeiro-resumo');
     const contFinLista = document.getElementById('admin-financeiro-lista');
 
@@ -509,7 +543,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     renderFinanceiro();
 
-    // Bloqueios
     const formBloq = document.getElementById('form-bloqueio');
     const listaBloq = document.getElementById('lista-bloqueios');
 
@@ -553,7 +586,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     renderBloqueios();
 
-    // Barbeiros
     const formBarbeiro = document.getElementById('form-barbeiro');
     const listaBarbeiros = document.getElementById('lista-barbeiros');
     const selectManualBarbeiro = document.getElementById('m-barbeiro');
@@ -594,7 +626,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     renderBarbeiros();
 
-    // Agendamento manual
     const formManual = document.getElementById('form-agendamento-manual');
     formManual?.addEventListener('submit', (e) => {
       e.preventDefault();
