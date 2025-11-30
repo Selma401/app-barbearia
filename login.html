@@ -3,17 +3,18 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Login - App Barbearia</title>
+  <title>Login • App Barbearia</title>
   <link rel="stylesheet" href="style.css" />
 </head>
-<body>
-  <main class="app-container">
+<body data-page="login">
+  <main class="app-frame">
     <header class="app-header">
+      <p class="app-logo">BARBERSHOP</p>
       <h1 class="app-title">Entrar</h1>
-      <p class="app-subtitle">Acesse sua conta para agendar.</p>
+      <p class="app-subtitle">Acesse com seu e-mail e senha.</p>
     </header>
 
-    <form action="home.html" method="get">
+    <form id="form-login">
       <div class="form-group">
         <label for="email">E-mail</label>
         <input id="email" name="email" type="email" placeholder="seuemail@exemplo.com" required />
@@ -24,16 +25,28 @@
         <input id="senha" name="senha" type="password" placeholder="Digite sua senha" required />
       </div>
 
+      <div style="text-align:right; margin-bottom:10px;">
+        <button type="button" id="btn-esqueci" class="btn-ghost">Esqueci a senha</button>
+      </div>
+
       <button type="submit" class="btn btn-full">Entrar</button>
     </form>
 
-    <div style="margin-top: 12px; text-align:center;">
-      <a href="index.html" class="btn btn-secondary">Cadastrar-se</a>
+    <div style="margin-top: 12px; text-align:center; font-size:0.85rem;">
+      <span>Não tem conta? </span><a href="index.html" class="btn-ghost">Cadastrar-se</a>
     </div>
 
     <footer class="app-footer">
-      App Barbearia • Protótipo para testes de usabilidade
+      Login simulado com validação de e-mail e 2 etapas (senha + código).
     </footer>
+
+    <div class="bottom-nav-dots">
+      <div class="nav-dot"></div>
+      <div class="nav-dot active"></div>
+      <div class="nav-dot"></div>
+    </div>
+
+    <script src="script.js"></script>
   </main>
 </body>
 </html>

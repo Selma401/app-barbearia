@@ -3,20 +3,26 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Cadastro - App Barbearia</title>
+  <title>Cadastro • App Barbearia</title>
   <link rel="stylesheet" href="style.css" />
 </head>
-<body>
-  <main class="app-container">
+<body data-page="cadastro">
+  <main class="app-frame">
     <header class="app-header">
+      <p class="app-logo">BARBERSHOP</p>
       <h1 class="app-title">Tela de Cadastro</h1>
-      <p class="app-subtitle">Crie sua conta para agendar seus horários.</p>
+      <p class="app-subtitle">Crie sua conta para começar a agendar.</p>
     </header>
 
-    <form action="login.html" method="get">
+    <form id="form-cadastro">
       <div class="form-group">
         <label for="nome">Nome</label>
-        <input id="nome" name="nome" type="text" placeholder="Digite seu nome" required />
+        <input id="nome" name="nome" type="text" placeholder="Seu nome completo" required />
+      </div>
+
+      <div class="form-group">
+        <label for="email">E-mail</label>
+        <input id="email" name="email" type="email" placeholder="seuemail@exemplo.com" required />
       </div>
 
       <div class="form-group">
@@ -30,25 +36,28 @@
       </div>
 
       <div class="form-group">
-        <label for="email">E-mail</label>
-        <input id="email" name="email" type="email" placeholder="seuemail@exemplo.com" required />
-      </div>
-
-      <div class="form-group">
         <label for="senha">Senha</label>
-        <input id="senha" name="senha" type="password" placeholder="Digite uma senha" required />
+        <input id="senha" name="senha" type="password" placeholder="Crie uma senha" required />
       </div>
 
       <button type="submit" class="btn btn-full">Cadastrar</button>
     </form>
 
-    <div style="margin-top: 12px; text-align:center;">
-      <a href="login.html" class="btn btn-secondary">Voltar para login</a>
+    <div style="margin-top: 10px; text-align:center;">
+      <a href="login.html" class="btn btn-secondary">Já tenho conta</a>
     </div>
 
     <footer class="app-footer">
-      App Barbearia • Protótipo para testes de usabilidade
+      App Barbearia • Protótipo de cadastro (dados não são salvos em servidor).
     </footer>
+
+    <div class="bottom-nav-dots">
+      <div class="nav-dot active"></div>
+      <div class="nav-dot"></div>
+      <div class="nav-dot"></div>
+    </div>
+
+    <script src="script.js"></script>
   </main>
 </body>
 </html>
