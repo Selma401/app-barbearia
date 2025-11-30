@@ -349,6 +349,7 @@ document.addEventListener('DOMContentLoaded', () => {
         barbeiro: 'Padrão',
         status: 'agendado',
         pago: false,
+        paymentMethod: null,
         criadoEm: new Date().toISOString()
       });
       setBookings(bookings);
@@ -460,6 +461,7 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
 
+    // Barbeiros base
     let barbers = getBarbers();
     if (!barbers.length) {
       barbers = [
@@ -497,6 +499,7 @@ document.addEventListener('DOMContentLoaded', () => {
     filtroData?.addEventListener('change', renderAdminAgendamentos);
     renderAdminAgendamentos();
 
+    // Financeiro
     const contFinResumo = document.getElementById('admin-financeiro-resumo');
     const contFinLista = document.getElementById('admin-financeiro-lista');
 
@@ -514,14 +517,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
       contFinResumo.textContent = `Total: R$ ${total.toFixed(2)} • Pago: R$ ${totalPago.toFixed(2)} • Pendente: R$ ${pendente.toFixed(2)}`;
 
-      let html = '<table class="table"><thead><tr><th>Data</th><th>Serviço</th><th>Valor</th><th>Status</th><th>Ação</th></tr></thead><tbody>';
+      let html = '<table class="table"><thead><tr><th>Data</th><th>Serviço</th><th>Valor</th><th>Situação / Forma</th><th>Ação</th></tr></thead><tbody>';
       list.forEach(b => {
         const [y, m, d] = b.data.split('-');
+        const situacaoHtml = b.pago
+          ? '<span class="chip pago">Pago</span>'
+          : '<span class="chip">Pendente</span>';
+        const metodo = b.pago && b.paymentMethod ? b.paymentMethod : '—';
+
         html += `<tr>
           <td>${d}/${m}/${y}</td>
           <td>${b.servico}</td>
           <td>R$ ${b.preco?.toFixed(2) || '0,00'}</td>
-          <td>${b.pago ? '<span class="chip pago">Pago</span>' : '<span class="chip">Pendente</span>'}</td>
+          <td>${situacaoHtml}<br><span class="badge-small">Forma de pagamento: ${metodo}</span></td>
           <td><button data-id="${b.id}" class="btn btn-secondary btn-marcar-pago">${b.pago ? 'Desmarcar' : 'Marcar pago'}</button></td>
         </tr>`;
       });
@@ -533,16 +541,150 @@ document.addEventListener('DOMContentLoaded', () => {
           const id = btn.getAttribute('data-id');
           const all = getBookings();
           const found = all.find(x => x.id === id);
-          if (found) {
-            found.pago = !found.pago;
-            setBookings(all);
-            renderFinanceiro();
+          if (!found) return;
+
+          if (!found.pago) {
+            const escolha = prompt(
+              'Informe a forma de pagamento:\\n1 - Cartão de crédito\\n2 - Cartão de débito\\n3 - Pix\\n4 - Dinheiro'
+            );
+            if (!escolha) return;
+            let metodo = null;
+            if (escolha === '1') metodo = 'Cartão de crédito';
+            else if (escolha === '2') metodo = 'Cartão de débito';
+            else if (escolha === '3') metodo = 'Pix';
+            else if (escolha === '4') metodo = 'Dinheiro';
+            else {
+              alert('Opção inválida. Operação cancelada.');
+              return;
+            }
+            found.pago = true;
+            found.paymentMethod = metodo;
+          } else {
+            found.pago = false;
+            found.paymentMethod = null;
           }
+
+          setBookings(all);
+          renderFinanceiro();
         });
       });
     }
     renderFinanceiro();
 
+    // Fechamento de caixa
+    const fcTipo = document.getElementById('fc-tipo');
+    const fcData = document.getElementById('fc-data');
+    const fcMes = document.getElementById('fc-mes');
+    const fcAno = document.getElementById('fc-ano');
+    const fcBarbeiro = document.getElementById('fc-barbeiro');
+    const btnFc = document.getElementById('btn-fc-calcular');
+    const divFcRes = document.getElementById('fc-resultado');
+
+    function calcularFechamento() {
+      const tipo = fcTipo.value;
+      let list = getBookings().filter(b => b.status !== 'cancelado');
+
+      if (tipo === 'dia') {
+        const d = fcData.value;
+        if (!d) {
+          alert('Informe a data.');
+          return;
+        }
+        list = list.filter(b => b.data === d);
+      } else if (tipo === 'mes') {
+        const mes = fcMes.value; // YYYY-MM
+        if (!mes) {
+          alert('Informe o mês.');
+          return;
+        }
+        const [y, m] = mes.split('-');
+        list = list.filter(b => {
+          const [by, bm] = b.data.split('-');
+          return by === y && bm === m;
+        });
+      } else if (tipo === 'ano') {
+        const ano = fcAno.value;
+        if (!ano) {
+          alert('Informe o ano.');
+          return;
+        }
+        list = list.filter(b => b.data.split('-')[0] === ano);
+      } else if (tipo === 'barbeiro') {
+        const nomeBarbeiro = fcBarbeiro.value;
+        if (!nomeBarbeiro) {
+          alert('Selecione o barbeiro.');
+          return;
+        }
+        list = list.filter(b => b.barbeiro === nomeBarbeiro);
+      }
+
+      if (!list.length) {
+        divFcRes.innerHTML = '<p class="tag">Nenhum atendimento encontrado para o filtro.</p>';
+        return;
+      }
+
+      const totalAtend = list.length;
+      const totalServ = list.reduce((s, b) => s + (b.preco || 0), 0);
+      const totalRecebido = list.filter(b => b.pago).reduce((s, b) => s + (b.preco || 0), 0);
+      const totalPendente = totalServ - totalRecebido;
+
+      const formas = {
+        'Cartão de crédito': 0,
+        'Cartão de débito': 0,
+        'Pix': 0,
+        'Dinheiro': 0
+      };
+
+      list.forEach(b => {
+        if (b.pago && b.paymentMethod && formas.hasOwnProperty(b.paymentMethod)) {
+          formas[b.paymentMethod] += b.preco || 0;
+        }
+      });
+
+      let titulo = 'Geral';
+      if (tipo === 'dia') titulo = 'Por dia';
+      if (tipo === 'mes') titulo = 'Por mês';
+      if (tipo === 'ano') titulo = 'Por ano';
+      if (tipo === 'barbeiro') titulo = 'Por barbeiro';
+
+      let html = `<p class="tag"><strong>Fechamento de caixa — ${titulo}</strong></p>`;
+      html += `<p class="tag">Total de atendimentos: ${totalAtend}</p>`;
+      html += `<p class="tag">Valor total em serviços: R$ ${totalServ.toFixed(2)}</p>`;
+      html += `<p class="tag">Situação: Pago: R$ ${totalRecebido.toFixed(2)} • Pendente: R$ ${totalPendente.toFixed(2)}</p>`;
+
+      html += `<p class="tag"><strong>Formas de pagamento:</strong><br>
+      Cartão de crédito: R$ ${formas['Cartão de crédito'].toFixed(2)}<br>
+      Cartão de débito: R$ ${formas['Cartão de débito'].toFixed(2)}<br>
+      Pix: R$ ${formas['Pix'].toFixed(2)}<br>
+      Dinheiro: R$ ${formas['Dinheiro'].toFixed(2)}</p>`;
+
+      html += '<h4 class="app-section-title" style="margin-top:10px;">Atendimentos encontrados</h4>';
+      html += '<table class="table"><thead><tr><th>Data</th><th>Hora</th><th>Cliente</th><th>Serviço</th><th>Valor</th><th>Situação</th><th>Forma</th><th>Barbeiro</th></tr></thead><tbody>';
+
+      list.forEach(b => {
+        const [y, m, d] = b.data.split('-');
+        const situacao = b.pago ? 'Pago' : 'Pendente';
+        const forma = b.pago && b.paymentMethod ? b.paymentMethod : '—';
+        html += `<tr>
+          <td>${d}/${m}/${y}</td>
+          <td>${b.hora}</td>
+          <td>${b.cliente}</td>
+          <td>${b.servico}</td>
+          <td>R$ ${b.preco?.toFixed(2) || '0,00'}</td>
+          <td>${situacao}</td>
+          <td>${forma}</td>
+          <td>${b.barbeiro || '-'}</td>
+        </tr>`;
+      });
+
+      html += '</tbody></table>';
+
+      divFcRes.innerHTML = html;
+    }
+
+    btnFc?.addEventListener('click', calcularFechamento);
+
+    // Bloqueios
     const formBloq = document.getElementById('form-bloqueio');
     const listaBloq = document.getElementById('lista-bloqueios');
 
@@ -555,8 +697,9 @@ document.addEventListener('DOMContentLoaded', () => {
       let html = '';
       blocks.forEach((b, idx) => {
         const [y, m, d] = b.date.split('-');
-        const label = b.time ? `${d}/${m}/${y} • ${b.time}` : `${d}/${m}/${y} (dia todo)`;
-        html += `<div class="tag">• ${label} <button data-i="${idx}" class="btn-ghost">Remover</button></div>`;
+        const labelBase = b.time ? `${d}/${m}/${y} • ${b.time}` : `${d}/${m}/${y} (dia todo)`;
+        const motivo = b.motivo ? ` — ${b.motivo}` : '';
+        html += `<div class="tag">• ${labelBase}${motivo} <button data-i="${idx}" class="btn-ghost">Remover</button></div>`;
       });
       listaBloq.innerHTML = html;
       listaBloq.querySelectorAll('button').forEach(btn => {
@@ -574,21 +717,24 @@ document.addEventListener('DOMContentLoaded', () => {
       e.preventDefault();
       const data = document.getElementById('bloq-data').value;
       const hora = document.getElementById('bloq-hora').value;
+      const motivo = document.getElementById('bloq-motivo').value.trim();
       if (!data) {
         alert('Informe a data para bloqueio.');
         return;
       }
       const blocks = getBlocks();
-      blocks.push({ date: data, time: hora || null });
+      blocks.push({ date: data, time: hora || null, motivo: motivo || null });
       setBlocks(blocks);
       renderBloqueios();
       e.target.reset();
     });
     renderBloqueios();
 
+    // Barbeiros
     const formBarbeiro = document.getElementById('form-barbeiro');
     const listaBarbeiros = document.getElementById('lista-barbeiros');
     const selectManualBarbeiro = document.getElementById('m-barbeiro');
+    const selectFcBarbeiro = document.getElementById('fc-barbeiro');
 
     function renderBarbeiros() {
       const list = getBarbers();
@@ -606,9 +752,19 @@ document.addEventListener('DOMContentLoaded', () => {
         selectManualBarbeiro.innerHTML = '';
         list.forEach(b => {
           const opt = document.createElement('option');
-          opt.value = b.id;
+          opt.value = b.nome;
           opt.textContent = b.nome;
           selectManualBarbeiro.appendChild(opt);
+        });
+      }
+
+      if (selectFcBarbeiro) {
+        selectFcBarbeiro.innerHTML = '<option value="">Selecione um barbeiro</option>';
+        list.forEach(b => {
+          const opt = document.createElement('option');
+          opt.value = b.nome;
+          opt.textContent = b.nome;
+          selectFcBarbeiro.appendChild(opt);
         });
       }
     }
@@ -626,34 +782,35 @@ document.addEventListener('DOMContentLoaded', () => {
 
     renderBarbeiros();
 
+    // Agendamento manual
     const formManual = document.getElementById('form-agendamento-manual');
     formManual?.addEventListener('submit', (e) => {
       e.preventDefault();
       const nome = document.getElementById('m-nome').value.trim();
       const servico = document.getElementById('m-servico').value.trim();
+      const preco = parseFloat(document.getElementById('m-preco').value || '0');
       const data = document.getElementById('m-data').value;
       const hora = document.getElementById('m-hora').value;
-      const barberId = document.getElementById('m-barbeiro').value;
+      const barberNome = document.getElementById('m-barbeiro').value;
 
-      if (!nome || !servico || !data || !hora || !barberId) {
+      if (!nome || !servico || !data || !hora || !barberNome) {
         alert('Preencha todos os campos.');
         return;
       }
 
-      const barbers = getBarbers();
-      const barber = barbers.find(b => b.id === barberId);
       const bookings = getBookings();
       bookings.push({
         id: genId(),
         servico,
-        preco: 0,
+        preco: isNaN(preco) ? 0 : preco,
         data,
         hora,
         cliente: nome,
         email: '',
-        barbeiro: barber ? barber.nome : 'Barbeiro',
+        barbeiro: barberNome,
         status: 'agendado',
         pago: false,
+        paymentMethod: null,
         criadoEm: new Date().toISOString()
       });
       setBookings(bookings);
